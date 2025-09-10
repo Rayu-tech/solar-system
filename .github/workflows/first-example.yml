@@ -3,25 +3,20 @@ name: my first ever job
 on: push
 
 jobs: 
-    first_job:
-        runs-on: ubuntu-latest
-        steps:
-        - name: Welcome message 
-          run: echo "My first Github Actions Job"
+  first_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Welcome message 
+        run: echo "My first Github Actions Job"
 
-        - name: List files 
-          run: ls
+      - name: List files in repo
+        run: ls
 
-        - name: Git Clone Repository
-          run: git clone https://github.com/Rayu-tech/solar-system.git
+      - name: Git Clone Repository
+        run: git clone https://github.com/Rayu-tech/solar-system.git
 
-        - name: change directory 
-          run: cd "solar-system"
+      - name: List files in cloned repo
+        run: ls -al solar-system
 
-        - name: List all files 
-          run: ls -al
-
-        - name: Read files
-          run: cat README.md
-
-
+      - name: Read README.md from cloned repo
+        run: cat solar-system/README.md
