@@ -12,6 +12,8 @@ jobs:
         - name: List files 
           run: ls
 
+        - name: Git Clone Repository
+          run: git clone https://github.com/Rayu-tech/solar-system.git
+
         - name: Read files 
           run: cat README.md
-          
