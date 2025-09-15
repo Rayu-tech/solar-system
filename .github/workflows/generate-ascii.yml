@@ -12,9 +12,6 @@ jobs:
       - name: List Repo Files
         run: ls -ltra
 
-      - name: Convert line endings (fix Windows CRLF issue)
-        run: sudo apt-get install -y dos2unix && dos2unix ascii-script.sh
-
       - name: Executing Ascii shell script
         run: |
           chmod +x ascii-script.sh
