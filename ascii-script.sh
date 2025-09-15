@@ -1,5 +1,4 @@
-#!/bin/bash
-sudo apt-get update -y
+#!/bin/sh
 sudo apt-get install -y cowsay
 cowsay -f dragon "Run for cover, I am a DRAGOOONNNN...... RAQWRRRRRRRR" >> dragon.txt
 grep -i "dragon" dragon.txt
