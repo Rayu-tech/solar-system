@@ -10,18 +10,25 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
         
-      - name: Welcome message 
-        run: echo "My first Github Actions Job"
+      - name: List and Read files 
+        run: | 
+             echo "My first Github Actions Job"
+             ls -ltra
+             cat README.md
 
-      - name: List files in repo
-        run: ls
+      - name: Generate ASCII Artwork
+        run: cowsay -f dragon "Run for cover, I am a DRAGON...RAWRRRR1" >> dragon.txt
 
-      - name: Git Clone Repository
-        run: git clone https://github.com/Rayu-tech/solar-system.git
+#      - name: List files in repo
+ #       run: ls
 
-      - name: List files in cloned repo
-        run: ls -al solar-system
+   #   - name: Git Clone Repository
+  #      run: git clone https://github.com/Rayu-tech/solar-system.git
 
-      - name: Read README.md from cloned repo
-        run: cat solar-system/README.md
+ #     - name: List files in cloned repo
+   #     run: ls -al solar-system
+
+     # - name: Read README.md from cloned repo
+  #      run: cat solar-system/README.md
+
 
