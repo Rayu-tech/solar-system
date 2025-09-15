@@ -6,11 +6,10 @@ jobs:
   ascii_job:
     runs-on: ubuntu-latest
     steps:
-
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: checkout Repo Files 
+      - name: List Repo Files
         run: ls -ltra
 
       - name: Executing Ascii shell script
