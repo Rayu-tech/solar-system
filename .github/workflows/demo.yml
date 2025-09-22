@@ -3,7 +3,7 @@ name: Deploy Charity Backend (Staging)
 on:
   push:
     branches: [ "staging" ]   # Trigger on staging branch push
-  workflow_dispatch:          # Allow manual trigger
+    workflow_dispatch:          # Allow manual trigger
 
 jobs:
   deploy:
