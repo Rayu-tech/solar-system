@@ -2,51 +2,43 @@ name: Deploy Charity Backend (Staging)
 
 on:
   push:
-    branches: [ "staging" ]   # Trigger on staging branch push
-    workflow_dispatch:          # Allow manual trigger
+    branches:
+      - staging
+  workflow_dispatch:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest   # GitHub-hosted runner (OR your self-hosted one)
+    runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout Code
+      # 1. Checkout the repo
       - name: Checkout Code
         uses: actions/checkout@v3
-      #  with:
-      #   ref: staging
+        with:
+          ref: staging
 
       # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'   # Adjust to match your NodeJS version in Jenkins (LMS-Backend)
+          node-version: '18'
 
-      # 3. Sync Code to Server
-      - name: Deploy Code to Staging Server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.STAGING_SERVER_HOST }}
-          username: ${{ secrets.STAGING_SERVER_USER }}
-          key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
-          script: |
-            # Clean old code
-            rm -rf /home/azureuser/Charity_Gift/stag/charity_app_backend/*
-            
-            # Copy new code from repo (requires rsync/scp or Git pull on server)
-            # Option 1: Git pull directly on server
-            cd /home/azureuser/Charity_Gift/stag/charity_app_backend || exit
-            git clone -b staging https://github.com/taralshah99/charity_app_backend.git .
-            
-            # Install dependencies
-            npm install
+      # 3. Install PM2 globally
+      - name: Install PM2
+        run: npm install -g pm2
 
-            # Restart with PM2
-            APP_NAME="stage_charity_app_backend"
-            if pm2 info "$APP_NAME" >/dev/null 2>&1; then
-              pm2 stop "$APP_NAME"
-              pm2 start "$APP_NAME"
-              pm2 save
-            else
-              pm2 start src/server.js --name "$APP_NAME"
-            fi
+      # 4. Install project dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # 5. Start / Restart the app using PM2
+      - name: Start / Restart App with PM2
+        run: |
+          APP_NAME="stage_charity_app_backend"
+          if pm2 info "$APP_NAME" >/dev/null 2>&1; then
+            pm2 stop "$APP_NAME"
+            pm2 start "$APP_NAME"
+            pm2 save
+          else
+            pm2 start src/server.js --name "$APP_NAME"
+          fi
