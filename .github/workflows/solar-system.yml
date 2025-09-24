@@ -1,36 +1,64 @@
-name: Solar System Workflow
+name: Node.js CI (Solar System)
 
-on: 
-  workflow_dispatch:
+on:
   push:
     branches:
       - main
-      - 'feature/*'
+      - "feature/*"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  unit-testing:
-    name: Unit Testing
+  test:
     runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      NODE_ENV: test
+      # Connection string for mongoose in tests
+      MONGO_URI: mongodb://localhost:27017/solar-system-test
+
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup NodeJS Version
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
+          cache: npm
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm install
 
-      - name: Unit Testing
+      - name: Run Unit Tests
         run: npm test
 
-      - name: Archive Test Result
-        uses: actions/upload-artifact@v4
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
         with:
-          name: Mocha-Test-Result
+          name: mocha-test-results
           path: test-results.xml
 
-      - name: Hello There
-        run: echo "Hello there"
+      - name: Run Coverage
+        run: npm run coverage
+
+      - name: Upload Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage
